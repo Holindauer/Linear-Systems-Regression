@@ -17,10 +17,18 @@ class Dataset:
         x = torch.randn(batch_size, size, 1)        
         b = torch.bmm(A, x) # <--- bmm ==  batch matrix multiplication
 
-        input = self.vectorize(A, b) # <--- vectorize example components
+        input = self.vectorize(A, b)    # <--- vectorize example components
+        target = x.view(batch_size, -1) # <--- flatten x
 
-        return input, x
+        return input, target
     
     # Since the initial model will be an MLP, we need toconcat and vectorize the matrix A and vector b as inputs
-    def vectorize(self, A :Tensor, b :Tensor) -> Tensor:
-        return torch.cat((A.view(-1), b.view(-1)))
+    def vectorize(self, A: Tensor, b: Tensor) -> Tensor:
+
+        batch_size, size, _ = A.shape  # Assuming A is of shape [batch_size, size, size]
+
+        # Reshape A and b while keeping the batch dimension intact
+        A_flat, b_flat = A.view(batch_size, -1), b.view(batch_size, -1)
+
+        # Concatenate along the second dimension (columns)
+        return torch.cat((A_flat, b_flat), dim=1)

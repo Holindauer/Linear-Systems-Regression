@@ -7,7 +7,7 @@ class Model(nn.Module):
     def __init__(self, A_size :int) -> None:
         super(Model, self).__init__()
         self.A_size = A_size
-        self.input_features = A_size ** 3 # A and b elements
+        self.input_features = (A_size ** 2) + A_size # A and b elements
 
         self.fc1 = nn.Linear(self.input_features, 100)
         self.fc2 = nn.Linear(100, A_size) # <--- output is a vector x of size A_size
