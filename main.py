@@ -1,12 +1,9 @@
 import torch
-
 from train import Trainer
 from train import TrainingConfig
-from model import Model
+from simple_model import Model
 from generate_dataset import Dataset
 from early_stopping import Early_Stopping
-import numpy as np
-
 
 if __name__ == "__main__":
 
@@ -27,12 +24,15 @@ if __name__ == "__main__":
         device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
         optimizer=torch.optim.Adam,
         criterion=torch.nn.MSELoss(),
-        A_size=2,
+        A_size=4,
         early_stopping=early_stopping
        )
     
     # setup dataset
-    dataset = Dataset()
+    dataset = Dataset(
+        matrix_type="sparse",
+        fill_percentage=0.1
+    )
 
     # setup model
     model = Model(config.A_size)
@@ -46,6 +46,11 @@ if __name__ == "__main__":
     # create a batch using the trained model and run a forward pass and print the targets next to the predictions
     X, y = dataset.gen_batch(10, config.A_size)
     y_hat = trained_model(X)
+
+    # print A and b as well 
+
+    print(f"\n\nA: {X[:, :config.A_size ** 2].detach().cpu().numpy()}")
+    print(f"b: {X[:, config.A_size ** 2:].detach().cpu().numpy()}")
     print(f"\n\ny: {y.detach().cpu().numpy()}")
     print(f"y_hat: {y_hat.detach().cpu().numpy()}")
 
