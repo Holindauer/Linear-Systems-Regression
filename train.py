@@ -67,8 +67,6 @@ class Trainer:
                 self.model.load_state_dict(self.early_stopping.best_model) # set model to best historical model
                 break
 
-            print(f"Epoch {i} | Train Loss: {self.train_loss[i]} | Val Loss: {self.val_loss[i]} | ES Patience: {self.early_stopping.current_epoch - self.early_stopping.best_epoch}")
-
         return self.model
 
 
