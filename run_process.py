@@ -7,6 +7,8 @@ from generate_dataset import Dataset
 from early_stopping import Early_Stopping
 import sys
 
+# This class is used to parse arguments and run training on a linear systems approximation model from the CLI
+
 class Training_Args:
 
     def __init__(self):
@@ -71,7 +73,6 @@ class Training_Args:
         # run training
         trained_model = trainer.train()
 
+        # save model 
+        torch.save(trained_model.state_dict(), f'LinSys_Approximator{args_obj.args.A_size}.pt')
 
-# This is to ensure that the script runs only when it is executed directly, not when imported
-if __name__ == "__main__":
-    Training_Args.run_process()
